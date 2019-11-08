@@ -1,2 +1,3 @@
-# k8s-helm-chart-example
-A simple kubernetes helm chart example.
+# k8s helm chart demo
+
+A simple kubernetes helm chart demo.

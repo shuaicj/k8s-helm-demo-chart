@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "nginx-conf.fullname" . }}
+  labels:
+    {{- include "nginx-conf.labels.full" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "nginx-conf.labels.basic" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "nginx-conf.labels.basic" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+          volumeMounts:
+            - name: conf-volume
+              mountPath: "/etc/nginx/nginx.conf"
+              subPath: "nginx.conf"
+      volumes:
+        - name: conf-volume
+          configMap:
+            name: {{ include "nginx-conf.fullname" . }}
+          # projected:
+          #   sources:
+          #     - configMap:
+          #         name: {{ include "nginx-conf.fullname" . }}
+          #         items:
+          #             - key: nginx.conf
+          #               path: game.properties
+
+
