@@ -18,22 +18,23 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
+            - name: http-80
               containerPort: 80
+            - name: http-8080
+              containerPort: 8080
           volumeMounts:
-            - name: conf-volume
-              mountPath: "/etc/nginx/nginx.conf"
+            - mountPath: "/etc/nginx/nginx.conf"
+              name: main-conf-volume
               subPath: "nginx.conf"
+              readOnly: true
+            - mountPath: "/etc/nginx/conf.d/"
+              name: dir-conf-volume
+              readOnly: true
       volumes:
-        - name: conf-volume
+        - name: main-conf-volume
           configMap:
-            name: {{ include "nginx-conf.fullname" . }}
-          # projected:
-          #   sources:
-          #     - configMap:
-          #         name: {{ include "nginx-conf.fullname" . }}
-          #         items:
-          #             - key: nginx.conf
-          #               path: game.properties
-
+            name: {{ include "nginx-conf.fullname" . }}-main
+        - name: dir-conf-volume
+          configMap:
+            name: {{ include "nginx-conf.fullname" . }}-dir
 
