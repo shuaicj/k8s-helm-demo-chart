@@ -1,3 +1,3 @@
-# k8s helm chart demo
+# k8s helm demo chart
 
-A simple kubernetes helm chart demo.
+A simple kubernetes helm demo chart.

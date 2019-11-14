@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "nginx-conf.fullname" . }}
+  name: {{ include "k8s-helm-demo-chart.fullname" . }}
   labels:
-    {{- include "nginx-conf.labels.full" . | nindent 4 }}
+    {{- include "k8s-helm-demo-chart.labels.full" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "nginx-conf.labels.basic" . | nindent 6 }}
+      {{- include "k8s-helm-demo-chart.labels.basic" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "nginx-conf.labels.basic" . | nindent 8 }}
+        {{- include "k8s-helm-demo-chart.labels.basic" . | nindent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
@@ -24,17 +24,17 @@ spec:
               containerPort: 8080
           volumeMounts:
             - mountPath: "/etc/nginx/nginx.conf"
-              name: main-conf-volume
+              name: nginx-conf-volume
               subPath: "nginx.conf"
               readOnly: true
             - mountPath: "/etc/nginx/conf.d/"
-              name: dir-conf-volume
+              name: nginx-conf-d-volume
               readOnly: true
       volumes:
-        - name: main-conf-volume
+        - name: nginx-conf-volume
           configMap:
-            name: {{ include "nginx-conf.fullname" . }}-main
-        - name: dir-conf-volume
+            name: {{ include "k8s-helm-demo-chart.fullname" . }}-nginx-conf
+        - name: nginx-conf-d-volume
           configMap:
-            name: {{ include "nginx-conf.fullname" . }}-dir
+            name: {{ include "k8s-helm-demo-chart.fullname" . }}-nginx-conf-d
 

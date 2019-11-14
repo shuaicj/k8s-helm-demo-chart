@@ -1,4 +1,4 @@
-# Default values for nginx-conf.
+# Default values for k8s-helm-demo-chart.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -10,3 +10,5 @@ image:
 nameOverride: ""
 fullnameOverride: ""
 
+zookeeper:
+  replicaCount: 3

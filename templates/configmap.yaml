@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "k8s-helm-demo-chart.fullname" . }}-nginx-conf
+  labels:
+    {{- include "k8s-helm-demo-chart.labels.full" . | nindent 4 }}
+data:
+  nginx.conf: |-
+    {{- .Files.Get "conf-files/nginx.conf" | nindent 4 }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "k8s-helm-demo-chart.fullname" . }}-nginx-conf-d
+  labels:
+    {{- include "k8s-helm-demo-chart.labels.full" . | nindent 4 }}
+data:
+  {{- (.Files.Glob "conf-files/conf.d/*.conf").AsConfig | nindent 2 }}
+

@@ -1,0 +1,4 @@
+dependencies:
+  - name: "zookeeper"
+    version: "5.0.3"
+    repository: "@bitnami"
