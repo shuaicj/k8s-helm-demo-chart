@@ -32,19 +32,21 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Basic labels.
+Common labels.
 */}}
-{{- define "k8s-helm-demo-chart.labels.basic" -}}
-app.kubernetes.io/name: {{ include "k8s-helm-demo-chart.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+{{- define "k8s-helm-demo-chart.labels" -}}
+helm.sh/chart: {{ include "k8s-helm-demo-chart.chart" . }}
+{{ include "k8s-helm-demo-chart.selectorLabels" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
+{{- end }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
-Full labels.
+Selector labels.
 */}}
-{{- define "k8s-helm-demo-chart.labels.full" -}}
-{{ template "k8s-helm-demo-chart.labels.basic" . }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-helm.sh/chart: {{ include "k8s-helm-demo-chart.chart" . }}
+{{- define "k8s-helm-demo-chart.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "k8s-helm-demo-chart.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}

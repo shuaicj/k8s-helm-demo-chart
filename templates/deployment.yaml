@@ -3,15 +3,15 @@ kind: Deployment
 metadata:
   name: {{ include "k8s-helm-demo-chart.fullname" . }}
   labels:
-    {{- include "k8s-helm-demo-chart.labels.full" . | nindent 4 }}
+    {{- include "k8s-helm-demo-chart.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "k8s-helm-demo-chart.labels.basic" . | nindent 6 }}
+      {{- include "k8s-helm-demo-chart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "k8s-helm-demo-chart.labels.basic" . | nindent 8 }}
+        {{- include "k8s-helm-demo-chart.selectorLabels" . | nindent 8 }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
