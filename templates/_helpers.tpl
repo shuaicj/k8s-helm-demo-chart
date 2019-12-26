@@ -50,3 +50,19 @@ Selector labels.
 app.kubernetes.io/name: {{ include "k8s-helm-demo-chart.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
+
+{{/*
+Call the template of a subchart.
+See https://github.com/helm/helm/issues/4535.
+*/}}
+{{- define "k8s-helm-demo-chart.callSubchartTpl" }}
+{{- $dot := index . 0 }}
+{{- $subchart := index . 1 | splitList "." }}
+{{- $template := index . 2 }}
+{{- $values := $dot.Values }}
+{{- range $subchart }}
+{{- $values = index $values . }}
+{{- end }}
+{{- include $template (dict "Chart" (dict "Name" (last $subchart)) "Values" $values "Release" $dot.Release "Capabilities" $dot.Capabilities) }}
+{{- end }}
+
