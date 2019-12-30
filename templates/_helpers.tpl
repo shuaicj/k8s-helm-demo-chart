@@ -54,6 +54,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{/*
 Call the template of a subchart.
 See https://github.com/helm/helm/issues/4535.
+Usage: {{ include "k8s-helm-demo-chart.callSubchartTpl" (list . "subchartName" "subchartName.subchartTemplate") }}
 */}}
 {{- define "k8s-helm-demo-chart.callSubchartTpl" }}
 {{- $dot := index . 0 }}
