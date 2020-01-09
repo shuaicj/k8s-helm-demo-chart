@@ -54,16 +54,17 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{/*
 Call the template of a subchart.
 See https://github.com/helm/helm/issues/4535.
-Usage: {{ include "k8s-helm-demo-chart.callSubchartTpl" (list . "subchartName" "subchartName.subchartTemplate") }}
+Usage: {{ include "k8s-helm-demo-chart.template" (list . "subchartName.subchartTemplate") }}
+Usage: {{ include "k8s-helm-demo-chart.template" (list . "subchartName" "subchartName.subchartTemplate") }}
 */}}
-{{- define "k8s-helm-demo-chart.callSubchartTpl" }}
-{{- $dot := index . 0 }}
-{{- $subchart := index . 1 | splitList "." }}
-{{- $template := index . 2 }}
-{{- $values := $dot.Values }}
-{{- range $subchart }}
-{{- $values = index $values . }}
-{{- end }}
-{{- include $template (dict "Chart" (dict "Name" (last $subchart)) "Values" $values "Release" $dot.Release "Capabilities" $dot.Capabilities) }}
-{{- end }}
-
+{{- define "k8s-helm-demo-chart.template" }}
+{{- $dot := index . 0 -}}
+{{- $subchart := index . 1 -}}
+{{- $template := index . 1 -}}
+{{- if eq (len .) 2 -}}
+{{- $subchart = index . 1 | splitList "." | first -}}
+{{- else -}}
+{{- $template = index . 2 -}}
+{{- end -}}
+{{- include $template (dict "Chart" (dict "Name" $subchart) "Values" (index $dot.Values $subchart) "Release" $dot.Release "Capabilities" $dot.Capabilities) }}
+{{- end -}}
