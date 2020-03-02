@@ -5,6 +5,8 @@ metadata:
   labels:
     {{- include "k8s-helm-demo-chart.labels" . | nindent 4 }}
 spec:
+  # the max num of replicaset keeped in rolling update, default 10
+  revisionHistoryLimit: 3
   selector:
     matchLabels:
       {{- include "k8s-helm-demo-chart.selectorLabels" . | nindent 6 }}
@@ -30,6 +32,8 @@ spec:
             - mountPath: "/etc/nginx/conf.d/"
               name: nginx-conf-d-volume
               readOnly: true
+            - name: mydir
+              mountPath: /mydir/
       volumes:
         - name: nginx-conf-volume
           configMap:
@@ -37,4 +41,7 @@ spec:
         - name: nginx-conf-d-volume
           configMap:
             name: {{ include "k8s-helm-demo-chart.fullname" . }}-nginx-conf-d
+        # emptyDir usage
+        - name: mydir
+          emptyDir: {}
 
